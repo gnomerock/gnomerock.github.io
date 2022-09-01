@@ -1,5 +1,5 @@
 <template>
-  <Tutorial/>
+  <div>Gnomerock website is coming soon...</div>
 </template>
 
 <script>
