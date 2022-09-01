@@ -1,7 +1,7 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'gnomerock.github.io',
+    title: `Gnomerock's site`,
     htmlAttrs: {
       lang: 'en'
     },
