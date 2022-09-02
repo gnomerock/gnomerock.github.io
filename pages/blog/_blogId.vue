@@ -11,8 +11,6 @@
 export default {
   async asyncData ({ $content, params }) {
     const page = await $content('blog').where({ slug: params.blogId }).fetch()
-    console.log(params)
-    console.log({page: page.body})
     return {
       page
     }
