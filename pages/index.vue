@@ -1,5 +1,7 @@
 <template>
-  <div>Gnomerock website is coming soon...</div>
+  <div class="my-8 mx-auto container">
+    <h3 class="text-blue-500">Gnomerock Studio</h3>
+  </div>
 </template>
 
 <script>

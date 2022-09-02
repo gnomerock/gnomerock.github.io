@@ -15,7 +15,7 @@
             <a 
               href="#" 
               class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              :class="{'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white': isActive}"
+              :class="{'block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white': menu.isActive}"
             >
               {{menu.name}}
             </a>
@@ -32,10 +32,10 @@ export default {
     return {
       isShowMenu: false,
       menus: [
-        { id: 1, name: 'Home' },
-        { id: 2, name: 'About Me' },
-        { id: 3, name: 'Blog' },
-        { id: 4, name: 'Contact' },
+        { id: 1, isActive: false, name: 'Home' },
+        { id: 2, isActive: false, name: 'About Me' },
+        { id: 3, isActive: false, name: 'Blog' },
+        { id: 4, isActive: false, name: 'Contact' },
       ]
     }
   }
