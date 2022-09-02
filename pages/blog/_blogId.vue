@@ -12,7 +12,7 @@ export default {
   async asyncData ({ $content, params }) {
     const page = await $content('blog').where({ slug: params.blogId }).fetch()
     return {
-      page
+      page: page[0]
     }
   }
 }
