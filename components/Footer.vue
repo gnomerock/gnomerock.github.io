@@ -2,10 +2,10 @@
   <footer class="p-4 bg-white sm:p-6 dark:bg-gray-900">
     <div class="md:flex md:justify-between">
       <div class="mb-6 md:mb-0">
-        <a href="https://flowbite.com/" class="flex items-center">
+        <!-- <a href="https://flowbite.com/" class="flex items-center">
           <img src="/images/avartar.png" class="mr-3 h-8" alt="FlowBite Logo">
           <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Gnomerock</span>
-        </a>
+        </a> -->
       </div>
       <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
         <div>
