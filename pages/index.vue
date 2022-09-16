@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-900 min-h-screen text-white">
+  <div class="bg-gray-900 min-h-screen text-white overflow-x-auto">
     <pre>
  ________  ________   ________  _____ ______   _______   ________  ________  ________  ___  __       
 |\   ____\|\   ___  \|\   __  \|\   _ \  _   \|\  ___ \ |\   __  \|\   __  \|\   ____\|\  \|\  \     
