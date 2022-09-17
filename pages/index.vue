@@ -105,7 +105,7 @@ export default {
       this.executeCommand(command)
       this.command = ''
 
-      this.$refs['terminal'].scrollIntoView({ behavior: 'smooth' })
+      window.scrollTo(0, document.body.scrollHeight);
     },
     executeCommand(command) {
       if(!command) return
