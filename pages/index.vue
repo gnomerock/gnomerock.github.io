@@ -19,6 +19,7 @@
 </template>
 
 <script>
+const googleSkillBadges = 'https://www.cloudskillsboost.google/public_profiles/77a9cde5-cfa2-4ff2-9f33-5d3b57c2ba61'
 export default {
   data() {
     return {
