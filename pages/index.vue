@@ -116,6 +116,19 @@ export default {
         this.histories.push(`command not found: ${command}`)
       }
     }
+  },
+  mounted() [
+    this._keyListener = (e) => {
+      if(e.key === 'l' && (e.ctrlKey || e.metaKey)) {
+        e.preventDefault();
+        this.histories = []
+      }
+    }
+    
+    document.addEventListener('keyDown', this._keyListener.bind(this))
+  },
+  beforeDestroy() {
+      document.removeEventListener('keydown', this._keyListener);
   }
 }
 </script>
