@@ -14,7 +14,6 @@
     <form @submit.prevent="enterCommand(command)" >
       <pre class="flex"><span>{{prompt}}</span> <input ref="terminal" type="text" :placeholder="helpText" class="flex-1 bg-gray-900 focus:outline-none ml-2" autofocus v-model="command"/></pre> 
     </form>
-    
   </div>
 </template>
 
@@ -72,8 +71,12 @@ export default {
         cat: {
           name: 'cat  ',
           description: `concatenate and print files`,
-          execute: () => {
-
+          execute: async (arg) => {
+            if(arg === 'about.md') {
+              console.log('good job')
+              const { data } = await useAsyncData('about', () => queryContent('/about').findOne())
+              console.log({data})
+            }
           }
         },
         sh: {
@@ -104,15 +107,16 @@ export default {
       this.histories.push(`${this.prompt} ${command}`)
       this.executeCommand(command)
       this.command = ''
-
       window.scrollTo(0, document.body.scrollHeight);
     },
     executeCommand(command) {
       if(!command) return
-      if(this.commands[command]) {
-        this.commands[command].execute()
+      let c = command.split(' ')[0]
+      let arg = command.split(' ')[1]
+      if(this.commands[c]) {
+        this.commands[c].execute(arg)
       }else{
-        this.histories.push(`command not found: ${command}`)
+        this.histories.push(`command not found: ${c}`)
       }
     }
   }
