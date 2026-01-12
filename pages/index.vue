@@ -73,10 +73,35 @@ export default {
           name: 'cat  ',
           description: `concatenate and print files`,
           execute: async (arg) => {
-            if(arg === 'about.md') {
-              console.log('good job')
-              const { data } = await useAsyncData('about', () => queryContent('/about').findOne())
-              console.log({data})
+    if (!arg) {
+      this.histories.push('usage: cat [file]');
+      return;
+    }
+
+    if (!this.directory[arg]) {
+      this.histories.push(`cat: ${arg}: No such file or directory`);
+      return;
+    }
+
+    if (!arg.endsWith('.md')) {
+      this.histories.push(`cat: ${arg}: is a directory or not a text file`);
+      return;
+    }
+
+    const path = '/' + arg.replace('.md', '');
+    const { data, error } = await useAsyncData(path, () => queryContent(path).findOne());
+
+    if (error.value) {
+        this.histories.push(`cat: ${arg}: ${error.value}`);
+        return;
+    }
+
+    if (data.value) {
+      // It seems that the content is in the body, but it is an object not a string.
+      // So I will loop through the body children to get the value out from it.
+              this.histories.push(JSON.stringify(data.value.body.children, null, 2));
+    } else {
+      this.histories.push(`cat: ${arg}: file not found`);
             }
           }
         },
@@ -121,7 +146,7 @@ export default {
       }
     }
   },
-  mounted() [
+  mounted() {
     this._keyListener = (e) => {
       if(e.key === 'l' && (e.ctrlKey || e.metaKey)) {
         e.preventDefault();
