@@ -176,9 +176,7 @@ export default {
             }
 
             if (data.value) {
-              // It seems that the content is in the body, but it is an object not a string.
-              // So I will loop through the body children to get the value out from it.
-                      this.histories.push(JSON.stringify(data.value.body.children, null, 2));
+              this.histories.push(JSON.stringify(data.value, null, 2));
             } else {
               this.histories.push(`cat: ${arg}: file not found`);
                     }
