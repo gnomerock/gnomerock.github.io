@@ -50,36 +50,32 @@ export default {
           name: 'ls   ',
           description: `list directory contents`,
           execute: async () => {
-            // Using a unique key for useAsyncData to avoid caching issues between different directories
-            const { data, error } = await useAsyncData(`ls-execute-${this.workDirectory}`, () => queryContent(this.workDirectory).find());
+            const data = await this.$content(this.workDirectory, { deep: true }).fetch();
 
-            if (error.value) {
+            if (!data) {
               this.histories.push(`ls: cannot access '${this.workDirectory}': No such file or directory`);
               return;
-            }
-
-            if (!data.value) {
-                return;
-            }
-
-            if (data.value.length === 1 && data.value[0].path === this.workDirectory) {
-                const item = data.value[0];
-                this.histories.push(item.slug + item.extension);
-                return;
             }
 
             const entries = new Set();
             const workDir = this.workDirectory;
 
-            data.value.forEach(item => {
+            const items = Array.isArray(data) ? data : [data];
+
+            items.forEach(item => {
               if (item.dir === workDir) {
                 entries.add(item.slug + item.extension);
-              } else if (item.dir.startsWith(workDir)) {
-                const dirPrefix = workDir === '/' ? '' : workDir;
-                const relativeDir = item.dir.substring(dirPrefix.length + 1);
-                const subdirectory = relativeDir.split('/')[0];
-                if (subdirectory) {
-                  entries.add(subdirectory + '/');
+              }
+              else if (item.dir.startsWith(workDir)) {
+                let dirPrefix = workDir === '/' ? '/' : workDir + '/';
+                let relativeDir = item.dir.substring(dirPrefix.length);
+                if(workDir === '/') relativeDir = item.dir.substring(1);
+
+                if (relativeDir) {
+                    const subdirectory = relativeDir.split('/')[0];
+                    if (subdirectory) {
+                      entries.add(subdirectory + '/');
+                    }
                 }
               }
             });
@@ -200,18 +196,20 @@ export default {
     }
   },
   methods: {
-    enterCommand(command) {
+    async enterCommand(command) {
       this.histories.push(`${this.prompt} ${command}`)
-      this.executeCommand(command)
+      await this.executeCommand(command)
       this.command = ''
-      window.scrollTo(0, document.body.scrollHeight);
+      this.$nextTick(() => {
+        window.scrollTo(0, document.body.scrollHeight);
+      })
     },
-    executeCommand(command) {
+    async executeCommand(command) {
       if(!command) return
       let c = command.split(' ')[0]
       let arg = command.split(' ')[1]
       if(this.commands[c]) {
-        this.commands[c].execute(arg)
+        await this.commands[c].execute(arg)
       }else{
         this.histories.push(`command not found: ${c}`)
       }
