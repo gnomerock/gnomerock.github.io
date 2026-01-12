@@ -23,5 +23,8 @@
   },
   "resolutions": {
     "cssnano": "5.1.15"
+  },
+  "volta": {
+    "node": "24.12.0"
   }
 }
