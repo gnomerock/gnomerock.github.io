@@ -27,7 +27,7 @@ export default {
       helpText: `type help to list all available commands...`,
       histories: [],
       command: '',
-      workDirectory: '/home/nuttakorn',
+      workDirectory: '/',
       commands: {
         help: {
           name: 'help',
@@ -49,62 +49,114 @@ export default {
         ls: {
           name: 'ls   ',
           description: `list directory contents`,
-          execute: () => {
-            for(let dir in this.directory) {
-              this.histories.push(dir)
+          execute: async () => {
+            const { data, error } = await useAsyncData(this.workDirectory, () => queryContent(this.workDirectory).find());
+            if (error.value) {
+              this.histories.push(`ls: ${this.workDirectory}: ${error.value}`);
+              return;
+            }
+            if (data.value) {
+              data.value.forEach((item) => {
+                this.histories.push(item.path.replace(this.workDirectory, ''));
+              });
             }
           }
         },
         cd: {
           name: 'cd   ',
           description: 'change directory',
-          execute: () => {
+          execute: async (arg) => {
+            if (!arg || arg === '~') {
+              this.workDirectory = '/'
+              return
+            }
 
+            if (arg === '..') {
+              if (this.workDirectory === '/') return;
+              const parts = this.workDirectory.split('/').filter(p => p)
+              parts.pop()
+              this.workDirectory = '/' + parts.join('/')
+              if (this.workDirectory === '') this.workDirectory = '/'
+              return
+            }
+
+            // Path building
+            let newPath;
+            if (arg.startsWith('/')) {
+              newPath = arg;
+            } else {
+              newPath = this.workDirectory === '/' ? `/${arg}` : `${this.workDirectory}/${arg}`
+            }
+
+            // Check if newPath is a file by trying to findOne()
+            const { data: fileData } = await useAsyncData(`file-${newPath}`, () => queryContent(newPath).findOne());
+            if (fileData.value && fileData.value.dir !== newPath) { // It's a file
+                this.histories.push(`cd: not a directory: ${arg}`);
+                return;
+            }
+
+            // Check if newPath is a directory by finding content inside it
+            const { data: dirData, error } = await useAsyncData(`dir-${newPath}`, () => queryContent(newPath).find());
+
+            if (error.value || !dirData.value || dirData.value.length === 0) {
+              this.histories.push(`cd: no such file or directory: ${arg}`);
+              return;
+            }
+
+            // It seems to be a directory.
+            // Clean up path, removing trailing slashes
+            this.workDirectory = newPath.replace(/\/$/, '') || '/';
           }
         },
         pwd: {
           name: 'pwd  ',
           description: 'print working directory',
           execute: () => {
-
+            this.histories.push(this.workDirectory)
           }
         },
         cat: {
           name: 'cat  ',
           description: `concatenate and print files`,
           execute: async (arg) => {
-    if (!arg) {
-      this.histories.push('usage: cat [file]');
-      return;
-    }
-
-    if (!this.directory[arg]) {
-      this.histories.push(`cat: ${arg}: No such file or directory`);
-      return;
-    }
-
-    if (!arg.endsWith('.md')) {
-      this.histories.push(`cat: ${arg}: is a directory or not a text file`);
-      return;
-    }
-
-    const path = '/' + arg.replace('.md', '');
-    const { data, error } = await useAsyncData(path, () => queryContent(path).findOne());
-
-    if (error.value) {
-        this.histories.push(`cat: ${arg}: ${error.value}`);
-        return;
-    }
-
-    if (data.value) {
-      // It seems that the content is in the body, but it is an object not a string.
-      // So I will loop through the body children to get the value out from it.
-              this.histories.push(JSON.stringify(data.value.body.children, null, 2));
-    } else {
-      this.histories.push(`cat: ${arg}: file not found`);
+            if (!arg) {
+              this.histories.push('usage: cat [file]');
+              return;
             }
-          }
-        },
+
+            if (!arg.endsWith('.md')) {
+              this.histories.push(`cat: ${arg}: is a directory or not a text file`);
+              return;
+            }
+
+            let path;
+            if (arg.startsWith('/')) {
+              path = arg;
+            } else {
+              path = this.workDirectory === '/' ? `/${arg}` : `${this.workDirectory}/${arg}`
+            }
+
+            const { data, error } = await useAsyncData(path, () => queryContent(path.replace('.md', '')).findOne());
+
+            if (error.value || !data.value) {
+                this.histories.push(`cat: ${arg}: No such file or directory`);
+                return;
+            }
+
+            if (data.value.children) {
+                this.histories.push(`cat: ${arg}: is a directory`);
+                return;
+            }
+
+            if (data.value) {
+              // It seems that the content is in the body, but it is an object not a string.
+              // So I will loop through the body children to get the value out from it.
+                      this.histories.push(JSON.stringify(data.value.body.children, null, 2));
+            } else {
+              this.histories.push(`cat: ${arg}: file not found`);
+                    }
+                  }
+                },
         sh: {
           name: 'sh   ',
           description: `run shell script`,
@@ -119,12 +171,6 @@ export default {
 
           }
         }
-      },
-      directory: {
-        "about.md": {},
-        blog: {},
-        projects : {},
-        "contactme.sh": {}
       },
     }
   },
