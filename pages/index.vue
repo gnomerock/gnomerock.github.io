@@ -50,16 +50,43 @@ export default {
           name: 'ls   ',
           description: `list directory contents`,
           execute: async () => {
-            const { data, error } = await useAsyncData(this.workDirectory, () => queryContent(this.workDirectory).find());
+            // Using a unique key for useAsyncData to avoid caching issues between different directories
+            const { data, error } = await useAsyncData(`ls-execute-${this.workDirectory}`, () => queryContent(this.workDirectory).find());
+
             if (error.value) {
-              this.histories.push(`ls: ${this.workDirectory}: ${error.value}`);
+              this.histories.push(`ls: cannot access '${this.workDirectory}': No such file or directory`);
               return;
             }
-            if (data.value) {
-              data.value.forEach((item) => {
-                this.histories.push(item.path.replace(this.workDirectory, ''));
-              });
+
+            if (!data.value) {
+                return;
             }
+
+            if (data.value.length === 1 && data.value[0].path === this.workDirectory) {
+                const item = data.value[0];
+                this.histories.push(item.slug + item.extension);
+                return;
+            }
+
+            const entries = new Set();
+            const workDir = this.workDirectory;
+
+            data.value.forEach(item => {
+              if (item.dir === workDir) {
+                entries.add(item.slug + item.extension);
+              } else if (item.dir.startsWith(workDir)) {
+                const dirPrefix = workDir === '/' ? '' : workDir;
+                const relativeDir = item.dir.substring(dirPrefix.length + 1);
+                const subdirectory = relativeDir.split('/')[0];
+                if (subdirectory) {
+                  entries.add(subdirectory + '/');
+                }
+              }
+            });
+
+            Array.from(entries).sort().forEach(entry => {
+              this.histories.push(entry);
+            });
           }
         },
         cd: {
