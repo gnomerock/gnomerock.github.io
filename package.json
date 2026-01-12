@@ -20,5 +20,8 @@
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^4.2.1",
     "postcss": "^8.4.4"
+  },
+  "resolutions": {
+    "cssnano": "5.1.15"
   }
 }
