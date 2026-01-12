@@ -111,19 +111,16 @@ export default {
               newPath = this.workDirectory === '/' ? `/${arg}` : `${this.workDirectory}/${arg}`
             }
 
-            // Check if newPath is a file by trying to findOne()
-            const { data: fileData } = await useAsyncData(`file-${newPath}`, () => queryContent(newPath).findOne());
-            if (fileData.value && fileData.value.dir !== newPath) { // It's a file
-                this.histories.push(`cd: not a directory: ${arg}`);
+            const content = await this.$content(newPath, { deep: true }).fetch();
+
+            if (!content || (Array.isArray(content) && content.length === 0)) {
+                this.histories.push(`cd: no such file or directory: ${arg}`);
                 return;
             }
 
-            // Check if newPath is a directory by finding content inside it
-            const { data: dirData, error } = await useAsyncData(`dir-${newPath}`, () => queryContent(newPath).find());
-
-            if (error.value || !dirData.value || dirData.value.length === 0) {
-              this.histories.push(`cd: no such file or directory: ${arg}`);
-              return;
+            if (!Array.isArray(content)) {
+                this.histories.push(`cd: not a directory: ${arg}`);
+                return;
             }
 
             // It seems to be a directory.
@@ -159,37 +156,38 @@ export default {
               path = this.workDirectory === '/' ? `/${arg}` : `${this.workDirectory}/${arg}`
             }
 
-            const { data, error } = await useAsyncData(path, () => queryContent(path.replace('.md', '')).findOne());
-
-            if (error.value || !data.value) {
+            try {
+                const file = await this.$content(path.replace(/\.md$/, '')).fetch();
+                if (Array.isArray(file)) {
+                    this.histories.push(`cat: ${arg}: is a directory`);
+                } else {
+                    this.histories.push(file.body);
+                }
+            } catch (e) {
                 this.histories.push(`cat: ${arg}: No such file or directory`);
-                return;
             }
-
-            if (data.value.children) {
-                this.histories.push(`cat: ${arg}: is a directory`);
-                return;
-            }
-
-            if (data.value) {
-              this.histories.push(JSON.stringify(data.value, null, 2));
-            } else {
-              this.histories.push(`cat: ${arg}: file not found`);
-                    }
-                  }
-                },
+          }
+        },
         sh: {
           name: 'sh   ',
           description: `run shell script`,
-          execute: () => {
-
+          execute: (arg) => {
+            if (!arg) {
+              this.histories.push('usage: sh [file]');
+              return;
+            }
+            this.histories.push(`Executing ${arg}...`);
           }
         },
         open: {
           name: 'open ',
           description: `open link`,
-          execute: () => {
-
+          execute: (arg) => {
+            if (!arg) {
+              this.histories.push('usage: open [url]');
+              return;
+            }
+            window.open(arg, '_blank');
           }
         }
       },
