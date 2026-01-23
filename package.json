@@ -3,28 +3,24 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "bun run generate-content && next dev --turbopack",
+    "build": "bun run generate-content && next build",
+    "start": "next start",
+    "lint": "next lint",
+    "generate-content": "bun run scripts/generate-content.ts"
   },
   "dependencies": {
-    "@nuxt/content": "^1.15.1",
-    "core-js": "^3.19.3",
-    "nuxt": "^2.15.8",
-    "vue": "^2.6.14",
-    "vue-server-renderer": "^2.6.14",
-    "vue-template-compiler": "^2.6.14",
-    "webpack": "^4.46.0"
+    "gray-matter": "^4.0.3",
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@nuxtjs/tailwindcss": "^4.2.1",
-    "postcss": "^8.4.4"
-  },
-  "resolutions": {
-    "cssnano": "5.1.15"
-  },
-  "volta": {
-    "node": "24.12.0"
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.10.9",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.3"
   }
 }

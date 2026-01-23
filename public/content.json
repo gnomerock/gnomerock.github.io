@@ -1,0 +1,29 @@
+[
+  {
+    "slug": "my-first-blog",
+    "dir": "/blogs",
+    "extension": ".md",
+    "body": "# My First Blog Post\n\nThis is my first blog post. I'm excited to share my thoughts with the world!"
+  },
+  {
+    "slug": "first-blog",
+    "dir": "/blogs",
+    "extension": ".md",
+    "title": "First Blog",
+    "body": "This is my first blog post."
+  },
+  {
+    "slug": "super-secret-project",
+    "dir": "/projects",
+    "extension": ".md",
+    "body": "# Super Secret Project\n\nThis is a super secret project. Please do not share this with anyone."
+  },
+  {
+    "slug": "about",
+    "dir": "/",
+    "extension": ".md",
+    "title": "About",
+    "description": "all about me and my work experience",
+    "body": "# Summary\nI'm experience with legacy system to cloud migration, Design and built startup project from scratch including web application and hybrid mobile development using Javascript and NodeJS.\n\n\n# Work Experience\n1. Mobile Application Developer\nKirimaru\n2017 - 2018 (2 years)\n- Odoo Customization\n- barcode scanner plugin customization for Odoo\n- Native Android Application Development\n- Native iOS Application development\n- Unity Multiplayer Server with custom websocket method. - Hybrid mobile application with unity3d\n Nuttakorn Buajarern - page 1\n2. Full Stack Engineer\nRegistration Office Chiang Mai University\n2018 - 2019 (2 years)\n- Implement dev environment using VMware vSphere for the team.\n- Fullstack developer (Nodejs, PHP, Vuejs, React).\n- Develop internal application for the organization.\n- Implement google cloud platform services to provide external services.\n- Linux Server Configuration (VPN, freeNAS, BIND DNS, backup).\n- Monitoring&troubleshooting mariaDB, mySQL database.\n- Legacy web application optimization with peak load about 100k request\n- Replace old hardware and move legacy code to new hardware by using docker\n3. Full Stack Engineer & DevOps\nHorganice Co.,Ltd.\n2019 - 2021 (3 years)\n- Design, Maintain, Monitoring& Troubleshooting Company's Infrastructure using google cloud platform (GCP, GKE, Cloudrun, Firebase).\n- Cross platform mobile development using Ionic2\n- Setup development pipeline&CI/CD with gitlabCI.\n- Setup&maintain microservices in k8s(GKE) with rancher.\n- Optimize Parse server\n- Develop APIs to work with 3rd party corperate\n- Rapid web application development for marketing purpose\n4. Full Stack Engineer & DevOps\nFreelance\n2021 - Current (2 years)\n- Develop website using Vuejs\n- Design & implement Google Cloud Platform Infrastructure\n- Optimize google cloud cont\n- Prototype application with firebase\n\n# Education\nChiang Mai University\nBachelor of Engineering (B.E.), Computer Engineering\n2011 - 2015\n- Senior project: Mobile network packet security\nRedirect packets from mobile to proxy server and use proxy server as packets sniffer to check what applications unsecure, unencrypted packet.\n- Openvpn admin: manage vpn users for my college students\n- Teacher Assistant: OOP programming\n- ACM-ICPC staff: setup linux environment for programming contest\n- teamspeak server admin: provide college student teamspeak server"
+  }
+]
