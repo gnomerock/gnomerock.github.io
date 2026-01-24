@@ -152,7 +152,10 @@ export default function Terminal() {
           return;
         }
 
-        if (arg === "..") {
+        // Strip trailing slash from argument
+        const normalizedArg = arg.replace(/\/$/, "");
+
+        if (normalizedArg === "..") {
           if (workDirectory === "/") return;
           const parts = workDirectory.split("/").filter((p) => p);
           parts.pop();
@@ -163,11 +166,11 @@ export default function Terminal() {
 
         // Path building
         let newPath: string;
-        if (arg.startsWith("/")) {
-          newPath = arg;
+        if (normalizedArg.startsWith("/")) {
+          newPath = normalizedArg;
         } else {
           newPath =
-            workDirectory === "/" ? `/${arg}` : `${workDirectory}/${arg}`;
+            workDirectory === "/" ? `/${normalizedArg}` : `${workDirectory}/${normalizedArg}`;
         }
 
         const items = getEntriesAtPath(newPath);
@@ -260,8 +263,108 @@ export default function Terminal() {
     }, 0);
   };
 
+  // Get completions for a partial path
+  const getPathCompletions = (partial: string): string[] => {
+    let searchDir: string;
+    let prefix: string;
+
+    if (partial.startsWith("/")) {
+      // Absolute path
+      const lastSlash = partial.lastIndexOf("/");
+      searchDir = partial.substring(0, lastSlash) || "/";
+      prefix = partial.substring(lastSlash + 1);
+    } else if (partial.includes("/")) {
+      // Relative path with subdirectory
+      const lastSlash = partial.lastIndexOf("/");
+      const relativePath = partial.substring(0, lastSlash);
+      searchDir =
+        workDirectory === "/"
+          ? `/${relativePath}`
+          : `${workDirectory}/${relativePath}`;
+      prefix = partial.substring(lastSlash + 1);
+    } else {
+      // Simple name in current directory
+      searchDir = workDirectory;
+      prefix = partial;
+    }
+
+    const entries = getEntriesAtPath(searchDir);
+    const matches = entries
+      .filter((e) => e.name.toLowerCase().startsWith(prefix.toLowerCase()))
+      .map((e) => e.name);
+
+    return matches;
+  };
+
+  // Handle tab completion
+  const handleTabCompletion = () => {
+    const parts = command.split(" ");
+    const isFirstWord = parts.length === 1;
+    const currentWord = parts[parts.length - 1];
+
+    if (isFirstWord) {
+      // Complete command names
+      const commandNames = Object.keys(commands);
+      const matches = commandNames.filter((cmd) =>
+        cmd.startsWith(currentWord.toLowerCase())
+      );
+
+      if (matches.length === 1) {
+        setCommand(matches[0] + " ");
+      } else if (matches.length > 1) {
+        // Show all matches
+        setHistories((prev) => [...prev, `${prompt} ${command}`]);
+        setHistories((prev) => [...prev, matches.join("  ")]);
+      }
+    } else {
+      // Complete file/directory paths
+      const cmdName = parts[0];
+      const pathArg = currentWord;
+
+      // Only complete for cd and cat commands
+      if (cmdName === "cd" || cmdName === "cat") {
+        const matches = getPathCompletions(pathArg);
+
+        if (matches.length === 1) {
+          const completion = matches[0];
+          parts[parts.length - 1] = pathArg.includes("/")
+            ? pathArg.substring(0, pathArg.lastIndexOf("/") + 1) + completion
+            : completion;
+          setCommand(parts.join(" "));
+        } else if (matches.length > 1) {
+          // Show all matches
+          setHistories((prev) => [...prev, `${prompt} ${command}`]);
+          setHistories((prev) => [...prev, matches.join("  ")]);
+
+          // Find common prefix for partial completion
+          const commonPrefix = matches.reduce((acc, match) => {
+            let i = 0;
+            while (
+              i < acc.length &&
+              i < match.length &&
+              acc[i].toLowerCase() === match[i].toLowerCase()
+            ) {
+              i++;
+            }
+            return acc.substring(0, i);
+          });
+
+          if (commonPrefix.length > pathArg.length) {
+            parts[parts.length - 1] = pathArg.includes("/")
+              ? pathArg.substring(0, pathArg.lastIndexOf("/") + 1) + commonPrefix
+              : commonPrefix;
+            setCommand(parts.join(" "));
+          }
+        }
+      }
+    }
+  };
+
   const handleKeyDown = (e: KeyboardEvent) => {
-    if (e.key === "l" && (e.ctrlKey || e.metaKey)) {
+    if (e.key === "Tab") {
+      e.preventDefault();
+      handleTabCompletion();
+    } else if (e.key === "l" && (e.ctrlKey || e.metaKey)) {
       e.preventDefault();
       setHistories([]);
     }
