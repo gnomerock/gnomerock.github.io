@@ -13,10 +13,76 @@
     "body": "This is my first blog post."
   },
   {
-    "slug": "super-secret-project",
+    "slug": "10th-entaneer-anniversary",
     "dir": "/projects",
     "extension": ".md",
-    "body": "# Super Secret Project\n\nThis is a super secret project. Please do not share this with anyone."
+    "title": "10th Entaneer Anniversary",
+    "description": "Celebration website for the 10th anniversary of Entaneer",
+    "body": "# 10th Entaneer Anniversary\n\nA commemorative website built for the **10th anniversary celebration** of Entaneer (Engineering at Chiang Mai University). This Vue.js application serves as a digital platform for the anniversary event.\n\n## Tech Stack\n\n- **Framework**: Vue.js\n- **Language**: JavaScript\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/10th-entaneer-anniversary)"
+  },
+  {
+    "slug": "yummii",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Yummii",
+    "description": "A TypeScript project",
+    "body": "# Yummii\n\nA TypeScript-based project for building modern web applications.\n\n## Tech Stack\n\n- **Language**: TypeScript\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/yummii)"
+  },
+  {
+    "slug": "unsplash-api",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Unsplash API",
+    "description": "API integration project for Unsplash image service",
+    "body": "# Unsplash API\n\nA project for integrating with the Unsplash API, allowing programmatic access to the vast library of high-quality, royalty-free images.\n\n## Tech Stack\n\n- **Language**: Bru (Bruno API client)\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/unsplash-api)"
+  },
+  {
+    "slug": "pumuplay-com",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "pumuplay.com",
+    "description": "Personal website built with Astro framework",
+    "body": "# pumuplay.com\n\nA personal website project built with the **Astro** framework. This is a modern static site that leverages Astro's component islands architecture for optimal performance.\n\n## Tech Stack\n\n- **Framework**: Astro\n- **Language**: TypeScript/JavaScript\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/pumuplay.com)"
+  },
+  {
+    "slug": "image-classification",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Image Classification API",
+    "description": "Simple image classification API using machine learning",
+    "body": "# Image Classification API\n\nA simple API for **image classification** using machine learning. This project provides an endpoint for classifying images into predefined categories.\n\n## Features\n\n- REST API for image classification\n- Machine learning based predictions\n- Simple integration\n\n## Tech Stack\n\n- **Language**: JavaScript\n- **Type**: API/Backend\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/image-classification)"
+  },
+  {
+    "slug": "android-capture-server",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Android Capture Server",
+    "description": "Packet capture service for Android devices via proxy",
+    "body": "# Android Capture Server\n\nA **packet capture service** that provides network traffic analysis for Android devices. The server acts as a proxy to capture and analyze network packets from mobile applications.\n\n## Features\n\n- Proxy-based packet capture\n- Android device support\n- Network traffic analysis\n- Security auditing tool\n\n## Tech Stack\n\n- **Language**: Python\n- **Type**: Security/Networking\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/android-capture-server)"
+  },
+  {
+    "slug": "pwa-hackathon-2017",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "PWA Hackathon 2017",
+    "description": "Progressive Web App for online hackathon competition",
+    "body": "# PWA Hackathon 2017\n\nA **Progressive Web App (PWA)** project created for an online hackathon competition in 2017. This project showcases PWA capabilities including offline support, push notifications, and responsive design.\n\n## Features\n\n- Offline-first architecture\n- Service worker implementation\n- Progressive Web App features\n\n## Tech Stack\n\n- **Language**: JavaScript\n- **Stars**: ⭐ 1\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/pwa-hackathon-2017)"
+  },
+  {
+    "slug": "simple-keylogger",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Simple Keylogger",
+    "description": "A very simple keylogger written in Python",
+    "body": "# Simple Keylogger\n\nA minimalist **keylogger** implementation in Python. This project demonstrates basic keyboard input capture techniques for educational purposes.\n\n> ⚠️ **Disclaimer**: This project is for educational purposes only. Use responsibly and ethically.\n\n## Tech Stack\n\n- **Language**: Python\n- **Type**: Security/Educational\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/simple-keylogger)"
+  },
+  {
+    "slug": "payment-report",
+    "dir": "/projects",
+    "extension": ".md",
+    "title": "Payment Report",
+    "description": "Getting payment reports from Thai banks with Gmail API",
+    "body": "# Payment Report\n\nA utility for extracting payment reports from **Thai banks** using the Gmail API. This tool automates the process of collecting and organizing bank notification emails into structured payment reports.\n\n## Features\n\n- Gmail API integration\n- Thai bank email parsing\n- Automated report generation\n\n## Tech Stack\n\n- **Language**: JavaScript\n- **Stars**: ⭐ 1\n\n## Links\n\n- [GitHub Repository](https://github.com/gnomerock/payment-report)"
   },
   {
     "slug": "about",
