@@ -23,7 +23,6 @@ export default function Terminal() {
   const prompt = "nuttakorn@gnomestudio ➜  ~ ";
   const helpText = "type help to list all available commands...";
 
-  const [histories, setHistories] = useState<string[]>([]);
   const [command, setCommand] = useState("");
   const [workDirectory, setWorkDirectory] = useState("/");
   const [allContent, setAllContent] = useState<ContentItem[]>([]);
@@ -31,6 +30,30 @@ export default function Terminal() {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const intro = `Last login: ${new Date().toString()} on ttys001`;
+
+  const commandDescriptions: Record<string, { name: string; description: string }> = {
+    help: { name: "help", description: "list all available commands" },
+    clear: { name: "clear", description: "clear the terminal screen" },
+    ls: { name: "ls   ", description: "list directory contents" },
+    cd: { name: "cd   ", description: "change directory" },
+    pwd: { name: "pwd  ", description: "print working directory" },
+    cat: { name: "cat  ", description: "concatenate and print files" },
+    open: { name: "open ", description: "open link" },
+  };
+
+  const getHelpTextMessages = () => {
+    const newHistories = ["This is all available commands."];
+    for (const cmd in commandDescriptions) {
+      newHistories.push(
+        `${commandDescriptions[cmd].name} \t\t => ${commandDescriptions[cmd].description}`
+      );
+    }
+    return newHistories;
+  };
+
+  const [histories, setHistories] = useState<string[]>(() => {
+    return [...getHelpTextMessages()];
+  });
 
   // Load content on mount
   useEffect(() => {
@@ -46,50 +69,6 @@ export default function Terminal() {
       });
   }, []);
 
-  const getEntriesAtPath = (path: string) => {
-    const normalizedPath = path === "/" ? "/" : path;
-    const entries = new Set<string>();
-    const items: Array<{ name: string; type: "file" | "directory" }> = [];
-
-    allContent.forEach((item) => {
-      if (item.dir === normalizedPath) {
-        const name = item.slug + item.extension;
-        if (!entries.has(name)) {
-          entries.add(name);
-          items.push({ name, type: "file" });
-        }
-      } else if (
-        item.dir.startsWith(normalizedPath === "/" ? "/" : `${normalizedPath}/`)
-      ) {
-        const dirPrefix = normalizedPath === "/" ? "/" : `${normalizedPath}/`;
-        let relativeDir = item.dir.substring(dirPrefix.length);
-        if (normalizedPath === "/") {
-          relativeDir = item.dir.substring(1);
-        }
-
-        if (relativeDir) {
-          const subdirectory = relativeDir.split("/")[0];
-          if (subdirectory && !entries.has(subdirectory + "/")) {
-            entries.add(subdirectory + "/");
-            items.push({ name: subdirectory + "/", type: "directory" });
-          }
-        }
-      }
-    });
-
-    return items.sort((a, b) => a.name.localeCompare(b.name));
-  };
-
-  const getFileContent = (filePath: string): ContentItem | null => {
-    const normalizedPath = filePath.replace(/\.md$/, "");
-    const parts = normalizedPath.split("/").filter(Boolean);
-    const slug = parts.pop() || "";
-    const dir = parts.length > 0 ? `/${parts.join("/")}` : "/";
-
-    return (
-      allContent.find((item) => item.slug === slug && item.dir === dir) || null
-    );
-  };
 
   const commands: Record<
     string,
@@ -103,13 +82,7 @@ export default function Terminal() {
       name: "help",
       description: "list all available commands",
       execute: () => {
-        const newHistories = ["This is all available commands."];
-        for (const cmd in commands) {
-          newHistories.push(
-            `${commands[cmd].name} \t\t => ${commands[cmd].description}`
-          );
-        }
-        setHistories((prev) => [...prev, ...newHistories]);
+        setHistories((prev) => [...prev, ...getHelpTextMessages()]);
       },
     },
     clear: {
@@ -243,6 +216,52 @@ export default function Terminal() {
       },
     },
   };
+
+  const getEntriesAtPath = (path: string) => {
+    const normalizedPath = path === "/" ? "/" : path;
+    const entries = new Set<string>();
+    const items: Array<{ name: string; type: "file" | "directory" }> = [];
+
+    allContent.forEach((item) => {
+      if (item.dir === normalizedPath) {
+        const name = item.slug + item.extension;
+        if (!entries.has(name)) {
+          entries.add(name);
+          items.push({ name, type: "file" });
+        }
+      } else if (
+        item.dir.startsWith(normalizedPath === "/" ? "/" : `${normalizedPath}/`)
+      ) {
+        const dirPrefix = normalizedPath === "/" ? "/" : `${normalizedPath}/`;
+        let relativeDir = item.dir.substring(dirPrefix.length);
+        if (normalizedPath === "/") {
+          relativeDir = item.dir.substring(1);
+        }
+
+        if (relativeDir) {
+          const subdirectory = relativeDir.split("/")[0];
+          if (subdirectory && !entries.has(subdirectory + "/")) {
+            entries.add(subdirectory + "/");
+            items.push({ name: subdirectory + "/", type: "directory" });
+          }
+        }
+      }
+    });
+
+    return items.sort((a, b) => a.name.localeCompare(b.name));
+  };
+
+  const getFileContent = (filePath: string): ContentItem | null => {
+    const normalizedPath = filePath.replace(/\.md$/, "");
+    const parts = normalizedPath.split("/").filter(Boolean);
+    const slug = parts.pop() || "";
+    const dir = parts.length > 0 ? `/${parts.join("/")}` : "/";
+
+    return (
+      allContent.find((item) => item.slug === slug && item.dir === dir) || null
+    );
+  };
+
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
